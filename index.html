@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Decido Yo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Lexend:wght@500;700&display=swap">
+<style>
+/* Layout: una sola columna de lectura (lectura fácil), barra de herramientas fija arriba, menú de botones grandes, una tarjeta por tema. */
+:root {
+  --bg: #F3F5F1;
+  --surface: #FFFFFF;
+  --ink: #18221F;
+  --muted: #45524C;
+  --line: #CBD3CD;
+  --accent: #0E6A5B;
+  --accent-ink: #FFFFFF;
+  --warm: #F2B544;
+  --warm-ink: #2A1E05;
+  --ok: #1D7A3A;
+  --bad: #B3261E;
+  --ok-bg: #E2F3E7;
+  --bad-bg: #FBE6E4;
+  --display: "Lexend", "Segoe UI", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Verdana", system-ui, sans-serif;
+  --scale: 1;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111715; --surface: #1A2320; --ink: #EDF2EF; --muted: #AEBBB5; --line: #2F3B37;
+    --accent: #5FCDB8; --accent-ink: #0B1513; --warm: #F4C163; --warm-ink: #2A1E05;
+    --ok: #7BD496; --bad: #FF8A80; --ok-bg: #16301F; --bad-bg: #3A1A18;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111715; --surface: #1A2320; --ink: #EDF2EF; --muted: #AEBBB5; --line: #2F3B37;
+  --accent: #5FCDB8; --accent-ink: #0B1513; --warm: #F4C163; --warm-ink: #2A1E05;
+  --ok: #7BD496; --bad: #FF8A80; --ok-bg: #16301F; --bad-bg: #3A1A18;
+  color-scheme: dark;
+}
+:root[data-contrast="alto"] {
+  --bg: #000000; --surface: #000000; --ink: #FFFFFF; --muted: #FFFFFF; --line: #FFFFFF;
+  --accent: #FFE600; --accent-ink: #000000; --warm: #FFE600; --warm-ink: #000000;
+  --ok: #7CFF8A; --bad: #FF9C94; --ok-bg: #000000; --bad-bg: #000000;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: calc(20px * var(--scale));
+  line-height: 1.6;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+
+.wrap {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* Barra de herramientas */
+.tools {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--surface);
+  border-bottom: 2px solid var(--line);
+}
+.tools .wrap { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding-block: 10px; }
+.voice-tools { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; font-size: 0.8em; font-weight: 700; flex-basis: 100%; }
+.voice-tools select { font: inherit; font-weight: 400; min-height: 44px; padding: 4px 8px; border-radius: 10px; border: 2px solid var(--accent); background: var(--surface); color: var(--ink); max-width: 100%; min-width: 0; }
+#voz { flex: 1 1 12em; }
+.tools .brand { font-family: var(--display); font-weight: 700; font-size: 1em; margin-right: auto; color: var(--accent); }
+button, .btn {
+  font: inherit; font-size: 0.85em; font-weight: 700;
+  min-height: 48px; padding: 8px 16px;
+  border-radius: 12px; border: 2px solid var(--accent);
+  background: var(--surface); color: var(--ink); cursor: pointer;
+}
+button:hover { background: var(--bg); }
+button:focus-visible, a:focus-visible { outline: 4px solid var(--warm); outline-offset: 3px; }
+button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+
+/* Portada */
+header.hero { padding-block: 40px 24px; }
+.eyebrow { font-size: 0.75em; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 0 0 8px; }
+h1 { font-family: var(--display); font-size: 2.4em; line-height: 1.1; margin: 0 0 16px; text-wrap: balance; }
+h1 span { display: block; font-size: 0.5em; font-weight: 500; color: var(--muted); margin-top: 8px; }
+.lead { font-size: 1.1em; margin: 0 0 8px; }
+.easy { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.easy li { padding-left: 1.4em; position: relative; }
+.easy li::before { content: ""; position: absolute; left: 0.2em; top: 0.62em; width: 0.5em; height: 0.5em; border-radius: 50%; background: var(--accent); }
+
+/* Menú */
+nav.menu { padding-block: 8px 32px; }
+nav.menu h2 { font-family: var(--display); font-size: 1.1em; margin: 0 0 12px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(10.5em, 1fr)); gap: 12px; list-style: none; margin: 0; padding: 0; }
+.tiles a {
+  display: flex; align-items: center; gap: 12px;
+  min-height: 72px; padding: 12px 14px;
+  background: var(--surface); color: var(--ink); text-decoration: none; font-weight: 700;
+  border: 2px solid var(--line); border-radius: 14px;
+}
+.tiles a:hover { border-color: var(--accent); }
+.tiles svg { width: 40px; height: 40px; flex: none; }
+
+/* Pictogramas */
+.pict { stroke: var(--accent); fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.pict .fill { fill: var(--warm); stroke: none; }
+
+/* Temas */
+section.topic {
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: 18px;
+  padding: 24px 20px;
+  margin-bottom: 20px;
+  scroll-margin-top: 90px;
+}
+.topic-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; flex-wrap: wrap; }
+.topic-head svg { width: 64px; height: 64px; flex: none; }
+.topic-head h2 { font-family: var(--display); font-size: 1.5em; line-height: 1.2; margin: 0; flex: 1 1 10em; min-width: 0; }
+.listen { border-color: var(--warm); }
+.listen[aria-pressed="true"] { background: var(--warm); color: var(--warm-ink); border-color: var(--warm); }
+.topic p { margin: 0 0 12px; }
+.key {
+  margin-top: 16px; padding: 12px 16px; border-radius: 12px;
+  background: var(--warm); color: var(--warm-ink); font-weight: 700; font-size: 1.05em;
+}
+.words { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 8px 0 12px; }
+.words li { border: 2px solid var(--line); border-radius: 999px; padding: 4px 14px; font-weight: 700; }
+
+/* Practico */
+.card-game { border: 2px dashed var(--accent); border-radius: 14px; padding: 18px; }
+.counter { font-size: 0.8em; color: var(--muted); font-weight: 700; margin: 0 0 8px; font-variant-numeric: tabular-nums; }
+.situation { font-size: 1.1em; margin: 0 0 16px; min-height: 3.2em; }
+.choices { display: flex; flex-wrap: wrap; gap: 10px; }
+.choices button { flex: 1 1 9em; font-size: 0.95em; }
+.feedback { margin-top: 14px; padding: 12px 16px; border-radius: 12px; font-weight: 700; border: 2px solid; }
+.feedback.ok { background: var(--ok-bg); color: var(--ok); border-color: var(--ok); }
+.feedback.bad { background: var(--bad-bg); color: var(--bad); border-color: var(--bad); }
+.quiz { margin-top: 18px; }
+.choices.col { flex-direction: column; }
+.choices.col button { flex: none; text-align: left; }
+.next { margin-top: 12px; background: var(--accent); color: var(--accent-ink); }
+
+/* Ayuda */
+.lines { display: grid; gap: 10px; list-style: none; padding: 0; margin: 8px 0 12px; }
+.lines li { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; border: 2px solid var(--line); border-radius: 12px; padding: 10px 14px; }
+.lines strong { font-family: var(--display); font-size: 1.6em; color: var(--accent); min-width: 2.6em; font-variant-numeric: tabular-nums; user-select: all; }
+.lines span { flex: 1 1 12em; min-width: 0; }
+
+footer { padding-block: 24px 48px; color: var(--muted); font-size: 0.8em; }
+footer h2 { font-family: var(--display); font-size: 1.1em; color: var(--ink); margin: 0 0 8px; }
+footer p { margin: 0 0 8px; }
+footer ul { margin: 0; padding-left: 1.2em; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-cuerpo" viewBox="0 0 48 48"><circle class="fill" cx="24" cy="9" r="5"/><circle cx="24" cy="9" r="5"/><path d="M14 20 Q24 16 34 20 L31 31 H17 Z"/><path d="M19 31 L18 44 M29 31 L30 44 M14 20 L9 30 M34 20 L39 30"/></symbol>
+    <symbol id="i-decido" viewBox="0 0 48 48"><circle class="fill" cx="18" cy="12" r="5"/><circle cx="18" cy="12" r="5"/><path d="M10 44 V30 Q10 22 18 22 Q26 22 26 30 V44"/><path d="M28 20 L33 25 L43 13"/></symbol>
+    <symbol id="i-si" viewBox="0 0 48 48"><path d="M5 8 H25 V22 H13 L8 27 V22 H5 Z"/><path class="fill" d="M23 22 H43 V36 H40 V41 L35 36 H23 Z"/><path d="M23 22 H43 V36 H40 V41 L35 36 H23 Z"/><path d="M11 15 H19 M29 29 H37"/></symbol>
+    <symbol id="i-relacion" viewBox="0 0 48 48"><path class="fill" d="M24 40 C8 30 6 20 11 14 C15 9 21 11 24 16 C27 11 33 9 37 14 C42 20 40 30 24 40 Z"/><path d="M24 40 C8 30 6 20 11 14 C15 9 21 11 24 16 C27 11 33 9 37 14 C42 20 40 30 24 40 Z"/></symbol>
+    <symbol id="i-cuido" viewBox="0 0 48 48"><path class="fill" d="M24 5 L40 11 V23 C40 33 33 40 24 43 C15 40 8 33 8 23 V11 Z"/><path d="M24 5 L40 11 V23 C40 33 33 40 24 43 C15 40 8 33 8 23 V11 Z"/><path d="M17 24 L22 29 L31 19"/></symbol>
+    <symbol id="i-practico" viewBox="0 0 48 48"><rect x="6" y="10" width="24" height="30" rx="4"/><rect class="fill" x="18" y="6" width="24" height="30" rx="4"/><rect x="18" y="6" width="24" height="30" rx="4"/><path d="M26 20 L29 23 L35 16"/></symbol>
+    <symbol id="i-ayuda" viewBox="0 0 48 48"><circle cx="24" cy="24" r="17"/><circle class="fill" cx="24" cy="24" r="7"/><circle cx="24" cy="24" r="7"/><path d="M12 12 L19 19 M36 12 L29 19 M12 36 L19 29 M36 36 L29 29"/></symbol>
+    <symbol id="i-emocion" viewBox="0 0 48 48"><circle class="fill" cx="24" cy="24" r="18"/><circle cx="24" cy="24" r="18"/><path d="M17 20 V21 M31 20 V21 M16 29 Q24 36 32 29"/></symbol>
+    <symbol id="i-familia" viewBox="0 0 48 48"><circle cx="14" cy="13" r="5"/><circle class="fill" cx="34" cy="13" r="5"/><circle cx="34" cy="13" r="5"/><path d="M6 42 V30 Q6 23 14 23 Q20 23 22 28 M42 42 V30 Q42 23 34 23 Q28 23 26 28"/><path d="M18 36 H30"/></symbol>
+  </defs>
+</svg>
+
+<div class="tools" role="region" aria-label="Herramientas de lectura">
+  <div class="wrap">
+    <span class="brand">Decido Yo</span>
+    <button type="button" id="menos" aria-label="Letra más pequeña">A−</button>
+    <button type="button" id="mas" aria-label="Letra más grande">A+</button>
+    <button type="button" id="contraste" aria-pressed="false">Alto contraste</button>
+    <span class="voice-tools" id="voz-herr" hidden>
+      <label for="velocidad">Velocidad</label>
+      <select id="velocidad">
+        <option value="0.75">Lenta</option>
+        <option value="0.9" selected>Normal</option>
+        <option value="1.1">Rápida</option>
+      </select>
+    </span>
+  </div>
+</div>
+
+<main>
+  <header class="hero wrap" id="inicio">
+    <p class="eyebrow">Educación sexual en lectura fácil</p>
+    <h1>Decido Yo<span>Mi cuerpo, mis afectos, mis decisiones</span></h1>
+    <p class="lead">Esta página es para ti.</p>
+    <ul class="easy">
+      <li>Eres una persona adulta.</li>
+      <li>Tienes derecho a conocer tu cuerpo.</li>
+      <li>Tienes derecho a tomar tus propias decisiones.</li>
+      <li>Puedes leer o escuchar cada tema.</li>
+      <li>Puedes ir a tu ritmo y repetir las veces que quieras.</li>
+    </ul>
+  </header>
+
+  <nav class="menu wrap" aria-label="Temas">
+    <h2>Elige un tema</h2>
+    <ul class="tiles">
+      <li><a href="#cuerpo"><svg class="pict" aria-hidden="true"><use href="#i-cuerpo"/></svg>Mi cuerpo</a></li>
+      <li><a href="#decido"><svg class="pict" aria-hidden="true"><use href="#i-decido"/></svg>Yo decido</a></li>
+      <li><a href="#emociones"><svg class="pict" aria-hidden="true"><use href="#i-emocion"/></svg>Mis emociones</a></li>
+      <li><a href="#consentimiento"><svg class="pict" aria-hidden="true"><use href="#i-si"/></svg>Sí es sí, no es no</a></li>
+      <li><a href="#relaciones"><svg class="pict" aria-hidden="true"><use href="#i-relacion"/></svg>Mis relaciones</a></li>
+      <li><a href="#cuidado"><svg class="pict" aria-hidden="true"><use href="#i-cuido"/></svg>Me cuido</a></li>
+      <li><a href="#practico"><svg class="pict" aria-hidden="true"><use href="#i-practico"/></svg>Practico</a></li>
+      <li><a href="#ayuda"><svg class="pict" aria-hidden="true"><use href="#i-ayuda"/></svg>Pido ayuda</a></li>
+      <li><a href="#apoyos"><svg class="pict" aria-hidden="true"><use href="#i-familia"/></svg>Familias y profesionales</a></li>
+    </ul>
+  </nav>
+
+  <div class="wrap">
+    <section class="topic" id="cuerpo" aria-labelledby="t-cuerpo">
+      <div class="topic-head">
+        <svg class="pict" aria-hidden="true"><use href="#i-cuerpo"/></svg>
+        <h2 id="t-cuerpo">Mi cuerpo</h2>
+        <button type="button" class="listen" aria-pressed="false">Escuchar</button>
+      </div>
+      <div class="read">
+        <p>Mi cuerpo es mío.</p>
+        <p>Es importante saber cómo se llaman las partes de mi cuerpo.</p>
+        <p>Así puedo explicar lo que siento.</p>
+        <p>Así puedo contar si algo me duele o me molesta.</p>
+        <p>Estos son los nombres correctos:</p>
+        <ul class="words">
+          <li>Vulva</li><li>Vagina</li><li>Senos</li><li>Pene</li><li>Testículos</li><li>Ano</li>
+        </ul>
+        <p>Sentir deseo es normal en las personas adultas.</p>
+        <p>Tocar mi propio cuerpo en un lugar privado está bien.</p>
+        <p>Cuidar mi cuerpo también es bañarme y mantener limpias mis partes íntimas.</p>
+        <p class="key">Mi cuerpo es mío. Yo lo conozco y yo lo cuido.</p>
+      </div>
+    </section>
+
+    <section class="topic" id="decido" aria-labelledby="t-decido">
+      <div class="topic-head">
+        <svg class="pict" aria-hidden="true"><use href="#i-decido"/></svg>
+        <h2 id="t-decido">Yo decido</h2>
+        <button type="button" class="listen" aria-pressed="false">Escuchar</button>
+      </div>
+      <div class="read">
+        <p>Tengo derecho a decidir sobre mi vida.</p>
+        <p>Yo decido si quiero tener pareja.</p>
+        <p>Yo decido con quién quiero estar.</p>
+        <p>Yo decido cuándo quiero tener relaciones sexuales.</p>
+        <p>Yo decido si quiero tener hijos.</p>
+        <p>Puedo pedir apoyo para tomar una decisión.</p>
+        <p>Mi familia o un profesional me pueden explicar las cosas.</p>
+        <p>Pero la decisión final es mía.</p>
+        <p>En Colombia, la Ley 1996 de 2019 dice que las personas adultas con discapacidad pueden tomar sus propias decisiones.</p>
+        <p class="key">Me apoyan, pero no deciden por mí.</p>
+      </div>
+    </section>
+
+    <section class="topic" id="emociones" aria-labelledby="t-emociones">
+      <div class="topic-head">
+        <svg class="pict" aria-hidden="true"><use href="#i-emocion"/></svg>
+        <h2 id="t-emociones">Mis emociones</h2>
+        <button type="button" class="listen" aria-pressed="false">Escuchar</button>
+      </div>
+      <div class="read">
+        <p>Todas las personas sentimos emociones.</p>
+        <p>Mis emociones me ayudan a saber qué me gusta y qué no me gusta.</p>
+        <p>Puedo decir lo que siento.</p>
+      </div>
+      <p><strong>¿Cómo me siento hoy? Elige una emoción.</strong></p>
+      <div class="choices" id="emo-opciones" role="group" aria-label="Emociones">
+        <button type="button" data-e="alegria" aria-pressed="false">Alegría</button>
+        <button type="button" data-e="calma" aria-pressed="false">Calma</button>
+        <button type="button" data-e="nervios" aria-pressed="false">Nervios</button>
+        <button type="button" data-e="tristeza" aria-pressed="false">Tristeza</button>
+        <button type="button" data-e="enojo" aria-pressed="false">Enojo</button>
+        <button type="button" data-e="miedo" aria-pressed="false">Miedo o incomodidad</button>
+      </div>
+      <p class="feedback ok" id="emo-respuesta" aria-live="polite" hidden></p>
+      <div class="card-game quiz" data-quiz="decidir" aria-live="polite">
+        <p class="counter">Actividad: Yo puedo decidir</p>
+        <p class="situation">Una persona te invita a salir. Tú no quieres ir. ¿Qué puedes hacer?</p>
+        <div class="choices col">
+          <button type="button" data-ok="0">Aceptar aunque no quiera.</button>
+          <button type="button" data-ok="1">Decir que no y explicar mi decisión.</button>
+          <button type="button" data-ok="0">Dejar que otra persona decida por mí.</button>
+        </div>
+        <p class="feedback" hidden></p>
+      </div>
+      <p class="key">Yo conozco mis emociones. Yo decido qué hacer con ellas.</p>
+    </section>
+
+    <section class="topic" id="consentimiento" aria-labelledby="t-consentimiento">
+      <div class="topic-head">
+        <svg class="pict" aria-hidden="true"><use href="#i-si"/></svg>
+        <h2 id="t-consentimiento">Sí es sí, no es no</h2>
+        <button type="button" class="listen" aria-pressed="false">Escuchar</button>
+      </div>
+      <div class="read">
+        <p>Consentimiento es dar permiso.</p>
+        <p>Antes de un beso, una caricia o una relación sexual, las dos personas deben decir que sí.</p>
+        <p>Puedo decir que no en cualquier momento.</p>
+        <p>Puedo cambiar de opinión.</p>
+        <p>Si la otra persona dice que no, yo me detengo.</p>
+        <p>Si una persona está dormida o muy borracha, no puede dar permiso.</p>
+        <p>Nadie me puede obligar.</p>
+        <p class="key">Sí es sí. No es no. Y las dos personas deben estar de acuerdo.</p>
+      </div>
+    </section>
+
+    <section class="topic" id="relaciones" aria-labelledby="t-relaciones">
+      <div class="topic-head">
+        <svg class="pict" aria-hidden="true"><use href="#i-relacion"/></svg>
+        <h2 id="t-relaciones">Mis relaciones</h2>
+        <button type="button" class="listen" aria-pressed="false">Escuchar</button>
+      </div>
+      <div class="read">
+        <p>Puedo tener amigos, amigas, novio o novia.</p>
+        <p>Enamorarme es normal.</p>
+        <p>Puedo sentir alegría, nervios o tristeza. Todos los sentimientos son válidos.</p>
+        <p>Puedo contar lo que siento a una persona de confianza.</p>
+        <p>Una buena relación tiene respeto.</p>
+        <p>En una buena relación nadie grita, nadie golpea y nadie obliga.</p>
+        <p>En una buena relación las dos personas se escuchan.</p>
+        <p class="key">Merezco amor y respeto, como todas las personas.</p>
+      </div>
+      <div class="card-game quiz" data-quiz="afecto" aria-live="polite">
+        <p class="counter">Actividad: El afecto también se respeta</p>
+        <p class="situation">Quieres abrazar a una persona que te gusta. ¿Qué debes hacer?</p>
+        <div class="choices col">
+          <button type="button" data-ok="0">Abrazarla sin preguntar.</button>
+          <button type="button" data-ok="1">Preguntarle si quiere un abrazo y respetar su respuesta.</button>
+          <button type="button" data-ok="0">Insistir hasta que acepte.</button>
+        </div>
+        <p class="feedback" hidden></p>
+      </div>
+    </section>
+
+    <section class="topic" id="cuidado" aria-labelledby="t-cuidado">
+      <div class="topic-head">
+        <svg class="pict" aria-hidden="true"><use href="#i-cuido"/></svg>
+        <h2 id="t-cuidado">Me cuido</h2>
+        <button type="button" class="listen" aria-pressed="false">Escuchar</button>
+      </div>
+      <div class="read">
+        <p>Si tengo relaciones sexuales, me cuido.</p>
+        <p>El condón me protege de infecciones de transmisión sexual.</p>
+        <p>El condón también ayuda a evitar un embarazo.</p>
+        <p>Hay otros métodos para no tener hijos. Por ejemplo, pastillas, inyecciones o implantes.</p>
+        <p>En el centro de salud me pueden explicar cada método.</p>
+        <p>Tengo derecho a que me atiendan con respeto y me expliquen con palabras claras.</p>
+        <p>Nadie me puede operar para no tener hijos sin mi permiso.</p>
+        <p class="key">Mi salud es mi derecho. Pregunto todo lo que necesito.</p>
+      </div>
+    </section>
+
+    <section class="topic" id="practico" aria-labelledby="t-practico">
+      <div class="topic-head">
+        <svg class="pict" aria-hidden="true"><use href="#i-practico"/></svg>
+        <h2 id="t-practico">Practico</h2>
+        <button type="button" class="listen" aria-pressed="false">Escuchar</button>
+      </div>
+      <div class="card-game" aria-live="polite">
+        <p class="counter" id="contador">Situación 1 de 6 · Aciertos: 0</p>
+        <p class="situation read" id="situacion"></p>
+        <div class="choices" id="opciones">
+          <button type="button" data-r="si">Está bien</button>
+          <button type="button" data-r="no">No está bien</button>
+        </div>
+        <p class="feedback" id="respuesta" hidden></p>
+        <button type="button" class="next" id="siguiente" hidden>Siguiente situación</button>
+      </div>
+    </section>
+
+    <section class="topic" id="ayuda" aria-labelledby="t-ayuda">
+      <div class="topic-head">
+        <svg class="pict" aria-hidden="true"><use href="#i-ayuda"/></svg>
+        <h2 id="t-ayuda">Pido ayuda</h2>
+        <button type="button" class="listen" aria-pressed="false">Escuchar</button>
+      </div>
+      <div class="read">
+        <p>Pido ayuda si alguien me toca sin mi permiso.</p>
+        <p>Pido ayuda si alguien me obliga o me amenaza.</p>
+        <p>Pido ayuda si alguien me pide guardar un secreto que me hace sentir mal.</p>
+        <p>No es mi culpa.</p>
+        <p>Puedo contarle a una persona de confianza.</p>
+        <p>También puedo llamar a estos números gratis en Colombia:</p>
+        <ul class="lines">
+          <li><strong>123</strong><span>Línea de emergencias. Para cuando estoy en peligro.</span></li>
+          <li><strong>155</strong><span>Línea de orientación para mujeres que viven violencia.</span></li>
+          <li><strong>122</strong><span>Fiscalía. Para denunciar un abuso o una agresión.</span></li>
+        </ul>
+        <p class="key">Pedir ayuda está bien. No es mi culpa.</p>
+      </div>
+    </section>
+
+    <section class="topic" id="apoyos" aria-labelledby="t-apoyos">
+      <div class="topic-head">
+        <svg class="pict" aria-hidden="true"><use href="#i-familia"/></svg>
+        <h2 id="t-apoyos">Para familias y profesionales</h2>
+        <button type="button" class="listen" aria-pressed="false">Escuchar</button>
+      </div>
+      <div class="read">
+        <p>Las personas con discapacidad intelectual tienen deseos, sentimientos y derechos, como cualquier persona adulta.</p>
+        <p>Hablar de sexualidad no despierta conductas. La información las protege.</p>
+        <p>Acompañar es explicar con palabras claras, escuchar y respetar sus decisiones.</p>
+        <p>Sobreproteger es decidir por la persona. Eso le quita autonomía.</p>
+        <p>Usen los nombres reales de las partes del cuerpo.</p>
+        <p>Pregunten siempre a la persona qué quiere.</p>
+        <p class="key">Apoyar no es decidir por la otra persona.</p>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="wrap">
+  <h2>Sobre este recurso</h2>
+  <p>Recurso educativo de la estrategia "Decido Yo". Curso Discapacidad y Sexualidad (80011), Universidad Nacional Abierta y a Distancia (UNAD). Grupo 80011_72, 2026.</p>
+  <p>Autores: Jhonathan Esneider Rua Rodriguez y Maria Alejandra Cardenas Anaya. Actividades "Yo puedo decidir" y "El afecto también se respeta" propuestas por Maria Alejandra Cardenas Anaya.</p>
+  <p>Fuentes:</p>
+  <ul>
+    <li>Cely, L. D. (2018). Vivencias de la sexualidad de un grupo de personas con diversidad funcional de la ciudad de Sogamoso – Boyacá. Repositorio UNAD.</li>
+    <li>Franco, E. (2025). Orientación para la Inclusión 4.0. Repositorio UNAD.</li>
+    <li>Franco, E. C. (2025). Una mirada a la sexualidad en la discapacidad – Avances. Repositorio UNAD.</li>
+    <li>Ministerio de Salud y Protección Social. (2014). Política Nacional de Sexualidad, Derechos Sexuales y Derechos Reproductivos.</li>
+    <li>UNFPA. (2017). Derechos sexuales y derechos reproductivos – Infografía.</li>
+  </ul>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function save(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  // Tamaño de letra
+  var steps = [1, 1.15, 1.3, 1.5];
+  var idx = parseInt(load("dy-scale") || "0", 10);
+  if (!(idx >= 0 && idx < steps.length)) idx = 0;
+  function applyScale() { root.style.setProperty("--scale", steps[idx]); save("dy-scale", String(idx)); }
+  applyScale();
+  document.getElementById("mas").addEventListener("click", function () { if (idx < steps.length - 1) { idx++; applyScale(); } });
+  document.getElementById("menos").addEventListener("click", function () { if (idx > 0) { idx--; applyScale(); } });
+
+  // Alto contraste
+  var cBtn = document.getElementById("contraste");
+  function setContrast(on) {
+    if (on) root.setAttribute("data-contrast", "alto"); else root.removeAttribute("data-contrast");
+    cBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    save("dy-contrast", on ? "1" : "0");
+  }
+  setContrast(load("dy-contrast") === "1");
+  cBtn.addEventListener("click", function () { setContrast(cBtn.getAttribute("aria-pressed") !== "true"); });
+
+  // Escuchar (voz del navegador)
+  var synth = window.speechSynthesis;
+  var listenBtns = document.querySelectorAll(".listen");
+  var voice = null, voices = [];
+  var vSel = document.getElementById("voz"), rSel = document.getElementById("velocidad");
+  var savedRate = load("dy-rate"); if (savedRate) rSel.value = savedRate;
+  function pickVoice() {
+    if (!synth) return;
+    var all = synth.getVoices() || [];
+    voices = all.filter(function (v) { return /^es/i.test(v.lang); });
+    if (!voices.length) voices = all;
+    if (!voices.length) return;
+    function rank(v) {
+      var r = 0;
+      if (isNatural(v)) r -= 100;
+      if (/^es-CO/i.test(v.lang)) r -= 20; else if (/^es-(419|MX|US)/i.test(v.lang)) r -= 10;
+      return r;
+    }
+    voices.sort(function (a, b) { return rank(a) - rank(b); });
+    voice = all.find(function (v) { return /sabina/i.test(v.name); }) || voices[0];
+    document.getElementById("voz-herr").hidden = false;
+  }
+  function isNatural(v) { return /natural|neural|online|enhanced|premium|mejorad/i.test(v.name) || /^Google/i.test(v.name); }
+  function sample() {
+    synth.cancel();
+    var u = new SpeechSynthesisUtterance("Hola. Esta es la voz que elegiste.");
+    if (voice) { u.voice = voice; u.lang = voice.lang; } else { u.lang = "es-CO"; }
+    u.rate = parseFloat(rSel.value) || 0.9;
+    synth.speak(u);
+  }
+  if (rSel) rSel.addEventListener("change", function () { save("dy-rate", rSel.value); sample(); });
+  if (!synth || typeof SpeechSynthesisUtterance === "undefined") {
+    listenBtns.forEach(function (b) { b.hidden = true; });
+  } else {
+    pickVoice();
+    if (typeof synth.addEventListener === "function") synth.addEventListener("voiceschanged", pickVoice);
+    var runId = 0;
+    function resetAll() { listenBtns.forEach(function (b) { b.setAttribute("aria-pressed", "false"); b.textContent = "Escuchar"; }); }
+    function segments(sec) {
+      var out = [sec.querySelector("h2").textContent + "."];
+      sec.querySelectorAll(".read").forEach(function (r) {
+        r.querySelectorAll(":scope > p, :scope > ul").forEach(function (n) {
+          if (n.tagName === "UL") {
+            var items = Array.prototype.map.call(n.querySelectorAll("li"), function (li) { return li.innerText.trim(); });
+            out.push(items.join(", ") + ".");
+          } else { out.push(n.innerText.trim()); }
+        });
+        if (r.tagName === "P") out.push(r.innerText.trim());
+      });
+      return out.filter(Boolean);
+    }
+    listenBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var playing = btn.getAttribute("aria-pressed") === "true";
+        runId++; synth.cancel(); resetAll();
+        if (playing) return;
+        var my = runId, parts = segments(btn.closest("section")), k = 0;
+        btn.setAttribute("aria-pressed", "true"); btn.textContent = "Detener";
+        function next() {
+          if (my !== runId) return;
+          if (k >= parts.length) { resetAll(); return; }
+          var u = new SpeechSynthesisUtterance(parts[k++]);
+          u.lang = voice ? voice.lang : "es-CO";
+          if (voice) u.voice = voice;
+          u.rate = parseFloat(rSel.value) || 0.9;
+          u.pitch = 1;
+          u.onend = function () { setTimeout(next, 350); };
+          u.onerror = function () { if (my === runId) resetAll(); };
+          synth.speak(u);
+        }
+        next();
+      });
+    });
+  }
+
+  // Mis emociones
+  var emo = {
+    alegria: "Está bien sentir alegría. Puedo compartirla con las personas que quiero.",
+    calma: "Está bien sentir calma. Es un buen momento para pensar y decidir.",
+    nervios: "Está bien sentir nervios. Es normal antes de algo nuevo, como una cita. Puedo respirar despacio y hablar con alguien de confianza.",
+    tristeza: "Está bien sentir tristeza. Puedo llorar. Puedo contarle a una persona de confianza lo que me pasa.",
+    enojo: "Está bien sentir enojo. Puedo decir lo que me molesta sin gritar y sin golpear.",
+    miedo: "Si una persona me hace sentir miedo o incomodidad, puedo decir no y alejarme. Puedo pedir ayuda. No es mi culpa."
+  };
+  var emoBtns = document.querySelectorAll("#emo-opciones button"), emoOut = document.getElementById("emo-respuesta");
+  emoBtns.forEach(function (b) {
+    b.addEventListener("click", function () {
+      emoBtns.forEach(function (o) { o.setAttribute("aria-pressed", "false"); });
+      b.setAttribute("aria-pressed", "true");
+      emoOut.textContent = emo[b.getAttribute("data-e")];
+      emoOut.hidden = false;
+    });
+  });
+
+  // Actividades de tres opciones
+  var quizMsg = {
+    decidir: "Tengo derecho a decidir si quiero compartir tiempo con alguien. Puedo decir que no sin sentir presión.",
+    afecto: "Las muestras de afecto son voluntarias. Primero pregunto. Si la otra persona dice que no, respeto su decisión."
+  };
+  document.querySelectorAll(".quiz").forEach(function (q) {
+    var out = q.querySelector(".feedback"), bs = q.querySelectorAll("button");
+    bs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        var ok = b.getAttribute("data-ok") === "1";
+        out.className = "feedback " + (ok ? "ok" : "bad");
+        out.textContent = (ok ? "Muy bien. " : "Piénsalo otra vez. Puedes elegir de nuevo. ") + quizMsg[q.getAttribute("data-quiz")];
+        out.hidden = false;
+      });
+    });
+  });
+
+  // Practico: juego de situaciones
+  var items = [
+    { t: "Mi pareja me pide un beso. Yo no quiero. Le digo que no. Mi pareja respeta mi respuesta.", r: "si",
+      f: "Está bien. Mi pareja respetó mi decisión. No es no." },
+    { t: "Le dije a una persona que no me toque. Esa persona sigue tocándome.", r: "no",
+      f: "No está bien. Eso es abuso. Debo pedir ayuda. No es mi culpa." },
+    { t: "Quiero tener novio o novia. Mi familia me escucha y me ayuda a pensar.", r: "si",
+      f: "Está bien. Mi familia me apoya y la decisión es mía." },
+    { t: "Un médico quiere operarme para no tener hijos. Nadie me preguntó.", r: "no",
+      f: "No está bien. Yo decido si quiero tener hijos. Nadie puede operarme sin mi permiso." },
+    { t: "Alguien me dice: «Esto es un secreto, no le cuentes a nadie». El secreto me hace sentir mal.", r: "no",
+      f: "No está bien. Un secreto que me hace sentir mal se cuenta a una persona de confianza." },
+    { t: "Antes de tener relaciones sexuales, mi pareja y yo usamos condón.", r: "si",
+      f: "Está bien. El condón nos cuida a los dos." }
+  ];
+  var i = 0, score = 0;
+  var sit = document.getElementById("situacion"), cnt = document.getElementById("contador"),
+      fb = document.getElementById("respuesta"), nxt = document.getElementById("siguiente"),
+      opts = document.querySelectorAll("#opciones button");
+  function show() {
+    if (i >= items.length) {
+      sit.textContent = "Terminaste. Acertaste " + score + " de " + items.length + " situaciones. Puedes practicar otra vez.";
+      cnt.textContent = "Fin de la práctica";
+      opts.forEach(function (b) { b.hidden = true; });
+      fb.hidden = true; nxt.hidden = false; nxt.textContent = "Practicar otra vez";
+      return;
+    }
+    cnt.textContent = "Situación " + (i + 1) + " de " + items.length + " · Aciertos: " + score;
+    sit.textContent = items[i].t;
+    opts.forEach(function (b) { b.hidden = false; b.disabled = false; });
+    fb.hidden = true; nxt.hidden = true;
+  }
+  opts.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var right = b.getAttribute("data-r") === items[i].r;
+      if (right) score++;
+      fb.className = "feedback " + (right ? "ok" : "bad");
+      fb.textContent = (right ? "Correcto. " : "Revisa otra vez. ") + items[i].f;
+      fb.hidden = false;
+      opts.forEach(function (o) { o.disabled = true; });
+      cnt.textContent = "Situación " + (i + 1) + " de " + items.length + " · Aciertos: " + score;
+      nxt.hidden = false; nxt.textContent = "Siguiente situación";
+      nxt.focus();
+    });
+  });
+  nxt.addEventListener("click", function () {
+    if (i >= items.length) { i = 0; score = 0; } else { i++; }
+    show();
+  });
+  show();
+})();
+</script>
+</body>
+</html>
