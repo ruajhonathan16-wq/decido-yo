@@ -26,6 +26,8 @@
   --bad-bg: #FBE6E4;
   --display: "Lexend", "Segoe UI", system-ui, sans-serif;
   --body: "Atkinson Hyperlegible", "Verdana", system-ui, sans-serif;
+  --c-cuerpo: #FCE2D4; --c-decido: #DCEBFA; --c-emociones: #FFF0BF; --c-consent: #E0F1DC; --c-relaciones: #FBDDE6;
+  --c-cuidado: #D9F0EC; --c-practico: #E7E0F7; --c-ayuda: #FFDDD5; --c-apoyos: #E6EAEE;
   --scale: 1;
 }
 @media (prefers-color-scheme: dark) {
@@ -33,6 +35,8 @@
     --bg: #111715; --surface: #1A2320; --ink: #EDF2EF; --muted: #AEBBB5; --line: #2F3B37;
     --accent: #5FCDB8; --accent-ink: #0B1513; --warm: #F4C163; --warm-ink: #2A1E05;
     --ok: #7BD496; --bad: #FF8A80; --ok-bg: #16301F; --bad-bg: #3A1A18;
+    --c-cuerpo: #4A2B20; --c-decido: #1F3449; --c-emociones: #453913; --c-consent: #213A23; --c-relaciones: #4A2331;
+    --c-cuidado: #173A36; --c-practico: #2F2749; --c-ayuda: #4B241D; --c-apoyos: #2A3138;
     color-scheme: dark;
   }
 }
@@ -40,17 +44,20 @@
   --bg: #111715; --surface: #1A2320; --ink: #EDF2EF; --muted: #AEBBB5; --line: #2F3B37;
   --accent: #5FCDB8; --accent-ink: #0B1513; --warm: #F4C163; --warm-ink: #2A1E05;
   --ok: #7BD496; --bad: #FF8A80; --ok-bg: #16301F; --bad-bg: #3A1A18;
+    --c-cuerpo: #4A2B20; --c-decido: #1F3449; --c-emociones: #453913; --c-consent: #213A23; --c-relaciones: #4A2331;
+    --c-cuidado: #173A36; --c-practico: #2F2749; --c-ayuda: #4B241D; --c-apoyos: #2A3138;
   color-scheme: dark;
 }
 :root[data-contrast="alto"] {
   --bg: #000000; --surface: #000000; --ink: #FFFFFF; --muted: #FFFFFF; --line: #FFFFFF;
   --accent: #FFE600; --accent-ink: #000000; --warm: #FFE600; --warm-ink: #000000;
   --ok: #7CFF8A; --bad: #FF9C94; --ok-bg: #000000; --bad-bg: #000000;
+  --c-cuerpo: #000; --c-decido: #000; --c-emociones: #000; --c-consent: #000; --c-relaciones: #000; --c-cuidado: #000; --c-practico: #000; --c-ayuda: #000; --c-apoyos: #000;
   color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: auto; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
 body {
   background: var(--bg);
@@ -75,10 +82,11 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   border-bottom: 2px solid var(--line);
 }
 .tools .wrap { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding-block: 10px; }
-.voice-tools { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; font-size: 0.8em; font-weight: 700; flex-basis: 100%; }
+.voice-tools { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; font-size: 0.8em; font-weight: 700; }
 .voice-tools select { font: inherit; font-weight: 400; min-height: 44px; padding: 4px 8px; border-radius: 10px; border: 2px solid var(--accent); background: var(--surface); color: var(--ink); max-width: 100%; min-width: 0; }
 #voz { flex: 1 1 12em; }
 .tools .brand { font-family: var(--display); font-weight: 700; font-size: 1em; margin-right: auto; color: var(--accent); }
+@media (max-width: 520px) { .tools button, .voice-tools select { min-height: 44px; padding: 6px 12px; } .tools .wrap { gap: 6px; } }
 button, .btn {
   font: inherit; font-size: 0.85em; font-weight: 700;
   min-height: 48px; padding: 8px 16px;
@@ -102,15 +110,17 @@ h1 span { display: block; font-size: 0.5em; font-weight: 500; color: var(--muted
 /* Menú */
 nav.menu { padding-block: 8px 32px; }
 nav.menu h2 { font-family: var(--display); font-size: 1.1em; margin: 0 0 12px; }
-.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(10.5em, 1fr)); gap: 12px; list-style: none; margin: 0; padding: 0; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(7.6em, 1fr)); gap: 12px; list-style: none; margin: 0; padding: 0; }
 .tiles a {
-  display: flex; align-items: center; gap: 12px;
-  min-height: 72px; padding: 12px 14px;
-  background: var(--surface); color: var(--ink); text-decoration: none; font-weight: 700;
-  border: 2px solid var(--line); border-radius: 14px;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+  min-height: 140px; padding: 16px;
+  background: var(--tint, var(--surface)); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 1.05em; line-height: 1.25;
+  border: 2px solid transparent; border-radius: 18px;
+  transition: transform .15s ease, border-color .15s ease;
 }
-.tiles a:hover { border-color: var(--accent); }
-.tiles svg { width: 40px; height: 40px; flex: none; }
+.tiles a:hover { border-color: var(--accent); transform: translateY(-2px); }
+:root[data-contrast="alto"] .tiles a { border-color: var(--line); }
+.tiles svg { width: 64px; height: 64px; flex: none; background: var(--surface); border-radius: 50%; padding: 8px; }
 
 /* Pictogramas */
 .pict { stroke: var(--accent); fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
@@ -120,13 +130,21 @@ nav.menu h2 { font-family: var(--display); font-size: 1.1em; margin: 0 0 12px; }
 section.topic {
   background: var(--surface);
   border: 2px solid var(--line);
-  border-radius: 18px;
-  padding: 24px 20px;
-  margin-bottom: 20px;
+  border-radius: 20px;
+  padding: 0 0 24px;
+  margin-block: 20px;
+  overflow: hidden;
   scroll-margin-top: 90px;
 }
-.topic-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; flex-wrap: wrap; }
-.topic-head svg { width: 64px; height: 64px; flex: none; }
+section.topic > :not(.topic-head) { margin-left: 20px; margin-right: 20px; }
+.topic-head { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; background: var(--tint, var(--bg)); padding: 22px 20px; border-bottom: 2px solid var(--line); }
+.topic-head svg { width: 104px; height: 104px; flex: none; background: var(--surface); border-radius: 50%; padding: 14px; }
+.topic-nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; margin-top: 22px; }
+.topic-nav a { display: inline-flex; align-items: center; min-height: 48px; padding: 8px 16px; border-radius: 12px; border: 2px solid var(--accent); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 0.9em; }
+.topic-nav a.go { background: var(--accent); color: var(--accent-ink); }
+.back-top { margin-block: 16px 0; }
+.back-top a { color: var(--accent); font-weight: 700; text-decoration: none; font-size: 0.9em; }
+.topic-head h2:focus { outline: none; }
 .topic-head h2 { font-family: var(--display); font-size: 1.5em; line-height: 1.2; margin: 0; flex: 1 1 10em; min-width: 0; }
 .listen { border-color: var(--warm); }
 .listen[aria-pressed="true"] { background: var(--warm); color: var(--warm-ink); border-color: var(--warm); }
@@ -211,23 +229,23 @@ footer ul { margin: 0; padding-left: 1.2em; }
     </ul>
   </header>
 
-  <nav class="menu wrap" aria-label="Temas">
+  <nav class="menu wrap" id="menu" aria-label="Temas">
     <h2>Elige un tema</h2>
     <ul class="tiles">
-      <li><a href="#cuerpo"><svg class="pict" aria-hidden="true"><use href="#i-cuerpo"/></svg>Mi cuerpo</a></li>
-      <li><a href="#decido"><svg class="pict" aria-hidden="true"><use href="#i-decido"/></svg>Yo decido</a></li>
-      <li><a href="#emociones"><svg class="pict" aria-hidden="true"><use href="#i-emocion"/></svg>Mis emociones</a></li>
-      <li><a href="#consentimiento"><svg class="pict" aria-hidden="true"><use href="#i-si"/></svg>Sí es sí, no es no</a></li>
-      <li><a href="#relaciones"><svg class="pict" aria-hidden="true"><use href="#i-relacion"/></svg>Mis relaciones</a></li>
-      <li><a href="#cuidado"><svg class="pict" aria-hidden="true"><use href="#i-cuido"/></svg>Me cuido</a></li>
-      <li><a href="#practico"><svg class="pict" aria-hidden="true"><use href="#i-practico"/></svg>Practico</a></li>
-      <li><a href="#ayuda"><svg class="pict" aria-hidden="true"><use href="#i-ayuda"/></svg>Pido ayuda</a></li>
-      <li><a href="#apoyos"><svg class="pict" aria-hidden="true"><use href="#i-familia"/></svg>Familias y profesionales</a></li>
+      <li><a href="#cuerpo" style="--tint: var(--c-cuerpo)"><svg class="pict" aria-hidden="true"><use href="#i-cuerpo"/></svg>Mi cuerpo</a></li>
+      <li><a href="#decido" style="--tint: var(--c-decido)"><svg class="pict" aria-hidden="true"><use href="#i-decido"/></svg>Yo decido</a></li>
+      <li><a href="#emociones" style="--tint: var(--c-emociones)"><svg class="pict" aria-hidden="true"><use href="#i-emocion"/></svg>Mis emociones</a></li>
+      <li><a href="#consentimiento" style="--tint: var(--c-consent)"><svg class="pict" aria-hidden="true"><use href="#i-si"/></svg>Sí es sí, no es no</a></li>
+      <li><a href="#relaciones" style="--tint: var(--c-relaciones)"><svg class="pict" aria-hidden="true"><use href="#i-relacion"/></svg>Mis relaciones</a></li>
+      <li><a href="#cuidado" style="--tint: var(--c-cuidado)"><svg class="pict" aria-hidden="true"><use href="#i-cuido"/></svg>Me cuido</a></li>
+      <li><a href="#practico" style="--tint: var(--c-practico)"><svg class="pict" aria-hidden="true"><use href="#i-practico"/></svg>Practico</a></li>
+      <li><a href="#ayuda" style="--tint: var(--c-ayuda)"><svg class="pict" aria-hidden="true"><use href="#i-ayuda"/></svg>Pido ayuda</a></li>
+      <li><a href="#apoyos" style="--tint: var(--c-apoyos)"><svg class="pict" aria-hidden="true"><use href="#i-familia"/></svg>Familias y profesionales</a></li>
     </ul>
   </nav>
 
   <div class="wrap">
-    <section class="topic" id="cuerpo" aria-labelledby="t-cuerpo">
+    <section class="topic" style="--tint: var(--c-cuerpo)" id="cuerpo" aria-labelledby="t-cuerpo">
       <div class="topic-head">
         <svg class="pict" aria-hidden="true"><use href="#i-cuerpo"/></svg>
         <h2 id="t-cuerpo">Mi cuerpo</h2>
@@ -249,7 +267,7 @@ footer ul { margin: 0; padding-left: 1.2em; }
       </div>
     </section>
 
-    <section class="topic" id="decido" aria-labelledby="t-decido">
+    <section class="topic" style="--tint: var(--c-decido)" id="decido" aria-labelledby="t-decido">
       <div class="topic-head">
         <svg class="pict" aria-hidden="true"><use href="#i-decido"/></svg>
         <h2 id="t-decido">Yo decido</h2>
@@ -269,7 +287,7 @@ footer ul { margin: 0; padding-left: 1.2em; }
       </div>
     </section>
 
-    <section class="topic" id="emociones" aria-labelledby="t-emociones">
+    <section class="topic" style="--tint: var(--c-emociones)" id="emociones" aria-labelledby="t-emociones">
       <div class="topic-head">
         <svg class="pict" aria-hidden="true"><use href="#i-emocion"/></svg>
         <h2 id="t-emociones">Mis emociones</h2>
@@ -303,7 +321,7 @@ footer ul { margin: 0; padding-left: 1.2em; }
       <p class="key">Yo conozco mis emociones. Yo decido qué hacer con ellas.</p>
     </section>
 
-    <section class="topic" id="consentimiento" aria-labelledby="t-consentimiento">
+    <section class="topic" style="--tint: var(--c-consent)" id="consentimiento" aria-labelledby="t-consentimiento">
       <div class="topic-head">
         <svg class="pict" aria-hidden="true"><use href="#i-si"/></svg>
         <h2 id="t-consentimiento">Sí es sí, no es no</h2>
@@ -321,7 +339,7 @@ footer ul { margin: 0; padding-left: 1.2em; }
       </div>
     </section>
 
-    <section class="topic" id="relaciones" aria-labelledby="t-relaciones">
+    <section class="topic" style="--tint: var(--c-relaciones)" id="relaciones" aria-labelledby="t-relaciones">
       <div class="topic-head">
         <svg class="pict" aria-hidden="true"><use href="#i-relacion"/></svg>
         <h2 id="t-relaciones">Mis relaciones</h2>
@@ -349,7 +367,7 @@ footer ul { margin: 0; padding-left: 1.2em; }
       </div>
     </section>
 
-    <section class="topic" id="cuidado" aria-labelledby="t-cuidado">
+    <section class="topic" style="--tint: var(--c-cuidado)" id="cuidado" aria-labelledby="t-cuidado">
       <div class="topic-head">
         <svg class="pict" aria-hidden="true"><use href="#i-cuido"/></svg>
         <h2 id="t-cuidado">Me cuido</h2>
@@ -367,7 +385,7 @@ footer ul { margin: 0; padding-left: 1.2em; }
       </div>
     </section>
 
-    <section class="topic" id="practico" aria-labelledby="t-practico">
+    <section class="topic" style="--tint: var(--c-practico)" id="practico" aria-labelledby="t-practico">
       <div class="topic-head">
         <svg class="pict" aria-hidden="true"><use href="#i-practico"/></svg>
         <h2 id="t-practico">Practico</h2>
@@ -385,7 +403,7 @@ footer ul { margin: 0; padding-left: 1.2em; }
       </div>
     </section>
 
-    <section class="topic" id="ayuda" aria-labelledby="t-ayuda">
+    <section class="topic" style="--tint: var(--c-ayuda)" id="ayuda" aria-labelledby="t-ayuda">
       <div class="topic-head">
         <svg class="pict" aria-hidden="true"><use href="#i-ayuda"/></svg>
         <h2 id="t-ayuda">Pido ayuda</h2>
@@ -407,7 +425,7 @@ footer ul { margin: 0; padding-left: 1.2em; }
       </div>
     </section>
 
-    <section class="topic" id="apoyos" aria-labelledby="t-apoyos">
+    <section class="topic" style="--tint: var(--c-apoyos)" id="apoyos" aria-labelledby="t-apoyos">
       <div class="topic-head">
         <svg class="pict" aria-hidden="true"><use href="#i-familia"/></svg>
         <h2 id="t-apoyos">Para familias y profesionales</h2>
@@ -539,6 +557,37 @@ footer ul { margin: 0; padding-left: 1.2em; }
       });
     });
   }
+
+  // Navegación: un tema a la vez
+  var topics = Array.prototype.slice.call(document.querySelectorAll("section.topic"));
+  var homeEls = [document.getElementById("inicio"), document.querySelector("nav.menu"), document.querySelector("footer")];
+  topics.forEach(function (sec, k) {
+    var back = document.createElement("p");
+    back.className = "back-top";
+    back.innerHTML = '<a href="#menu">← Volver a los temas</a>';
+    sec.parentNode.insertBefore(back, sec);
+    var nav = document.createElement("div");
+    nav.className = "topic-nav";
+    var nx = topics[k + 1];
+    nav.innerHTML = '<a href="#menu">← Todos los temas</a>' +
+      (nx ? '<a class="go" href="#' + nx.id + '">Siguiente: ' + nx.querySelector("h2").textContent + ' →</a>' : '');
+    sec.appendChild(nav);
+  });
+  function route() {
+    var h = (location.hash || "").slice(1);
+    var active = topics.find(function (t) { return t.id === h; }) || null;
+    if (typeof runId === "number") runId++;
+    if (synth) { try { synth.cancel(); } catch (e) {} }
+    document.querySelectorAll(".listen").forEach(function (x) { x.setAttribute("aria-pressed", "false"); x.textContent = "Escuchar"; });
+    topics.forEach(function (t) { t.hidden = t !== active; t.previousElementSibling.hidden = t !== active; });
+    homeEls.forEach(function (el) { if (el) el.hidden = !!active; });
+    if (active) { var h2 = active.querySelector("h2"); h2.setAttribute("tabindex", "-1"); h2.focus({ preventScroll: true }); }
+    window.scrollTo(0, 0);
+    requestAnimationFrame(function () { window.scrollTo(0, 0); });
+    setTimeout(function () { window.scrollTo(0, 0); }, 60);
+  }
+  window.addEventListener("hashchange", route);
+  route();
 
   // Mis emociones
   var emo = {
